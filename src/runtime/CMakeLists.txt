@@ -57,6 +57,8 @@ set_target_properties(runtime PROPERTIES
 
 # デバッグビルド時のログ出力
 if(CMAKE_BUILD_TYPE MATCHES Debug)
-    message(STATUS "Runtime TJS2ソース数: ${TJS2_SOURCES}")
-    message(STATUS "Runtime Coreソース数: ${CORE_SOURCES}")
+    list(LENGTH TJS2_SOURCES TJS2_COUNT)
+    list(LENGTH CORE_SOURCES CORE_COUNT)
+    message(STATUS "Runtime TJS2ソース数: ${TJS2_COUNT}")
+    message(STATUS "Runtime Coreソース数: ${CORE_COUNT}")
 endif()
