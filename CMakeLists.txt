@@ -1,64 +1,64 @@
-# ============= KIRIKIRI X =============
-# Kirikiri X is a cross-platform game engine based on Kirikiri Z
-# ======================================
+# ===========================================
+# 吉里吉里X (KirikiriX)
+# Cross-platform game engine based on Kirikiri Z
+# ===========================================
 
 cmake_minimum_required(VERSION 3.21)
-project(krkrx LANGUAGES C CXX)
-
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# === 外部ライブラリをインポート ===
-include(FetchContent)
-FetchContent_Declare(
-        googletest
-        DOWNLOAD_EXTRACT_TIMESTAMP ON
-        URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+project(krkrx 
+    VERSION 0.1.0
+    DESCRIPTION "マルチプラットフォーム対応吉里吉里Zランタイム"
+    LANGUAGES C CXX
 )
-FetchContent_Declare(
-        sdl2
-        DOWNLOAD_EXTRACT_TIMESTAMP ON
-        URL https://github.com/libsdl-org/SDL/archive/refs/tags/release-2.32.4.zip
+
+# CMakeモジュールパスの追加
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
+# === 設定の読み込み ===
+include(CompilerSettings)
+include(Dependencies)
+
+# === サードパーティライブラリ ===
+add_subdirectory(src/third_party/oniguruma)
+
+# === インターフェース層 ===
+add_library(platform_interface INTERFACE)
+target_include_directories(platform_interface INTERFACE
+    src/runtime/core/interfaces
 )
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)  # For Windows: Prevent overriding the parent project's compiler/linker settings
-FetchContent_MakeAvailable(googletest)
-FetchContent_MakeAvailable(sdl2)
-add_subdirectory(src/third_party/oniguruma EXCLUDE_FROM_ALL)
 
-# === 吉里吉里X本体 ===
-add_subdirectory(src/runtime EXCLUDE_FROM_ALL)
+# === ランタイム層 ===
+add_subdirectory(src/runtime)
 
-if(WIN32)
-    # Windows 向けビルド
-    add_compile_definitions(UNICODE)
-    if (MSVC)
-        add_compile_options("/source-charset:utf-8")
-    endif()
-    add_subdirectory(src/platforms/windows EXCLUDE_FROM_ALL)
-    set(PLATFORM_IMPL_TARGET win32_impl)
-    set(PLATFORM_ENTRY_POINT_FILE
-            src/platforms/windows/main.cc
-            src/platforms/windows/krkrx.rc
-            src/platforms/windows/resource.h
-    )
+# === プラットフォーム実装 ===
+include(Platform)
 
-elseif(UNIX)
-    # UNIX, Linux 向けビルド
-    add_subdirectory(src/platforms/linux EXCLUDE_FROM_ALL)
-    set(PLATFORM_IMPL_TARGET linux_impl)
-    set(PLATFORM_ENTRY_POINT_FILE src/platforms/linux/main.cc)
+# === メイン実行ファイル ===
+add_executable(${PROJECT_NAME} 
+    ${PLATFORM_ENTRY_POINT_FILES}
+)
 
-else()
-    message(FATAL_ERROR "Unsupported platform: ${CMAKE_SYSTEM_NAME}")
-endif()
-
-add_executable(${PROJECT_NAME} ${PLATFORM_ENTRY_POINT_FILE})
 target_link_libraries(${PROJECT_NAME} PRIVATE
-        ${PLATFORM_IMPL_TARGET}
-        runtime
+    ${PLATFORM_IMPL_TARGET}
+    runtime
+)
+
+# 実行ファイルの設定
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    OUTPUT_NAME "krkrx"
+    DEBUG_POSTFIX "_d"
 )
 
 # === テスト ===
-# src/tests/CMakeLists.txt にテスト用の定義が記載されている
-add_subdirectory(src/tests)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    include(CTest)
+    if(BUILD_TESTING)
+        add_subdirectory(src/tests)
+    endif()
+endif()
+
+# === ビルド情報の表示 ===
+message(STATUS "=== KIRIKIRI X BUILD INFORMATION ==========")
+message(STATUS "PROJECT: ${PROJECT_NAME} v${PROJECT_VERSION}")
+message(STATUS "PLATFORM: ${PLATFORM_NAME}")
+message(STATUS "BUILD TYPE: ${CMAKE_BUILD_TYPE}")
+message(STATUS "===========================================")
