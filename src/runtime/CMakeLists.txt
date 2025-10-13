@@ -44,7 +44,7 @@ endif()
 target_link_libraries(runtime 
     PUBLIC
         onig                # 正規表現エンジン
-        SDL2::SDL2          # マルチメディア機能
+        SDL2::SDL2-static   # マルチメディア機能
 )
 
 # === ターゲットのプロパティ ===
