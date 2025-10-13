@@ -1,15 +1,15 @@
-#include "system.h"
-#include "minimal.h"
-#include "../script_manager.h"
-#include "../event_manager.h"
-#include "../libruntime.h"
-#include "../storage/unified_storage_path.h"
+﻿#include "system_class.h"
+#include "../minimal/minimal_class.h"
+#include "../../script_manager.h"
+#include "../../event_manager.h"
+#include "../../libruntime.h"
+#include "../../storage/unified_storage_path.h"
 
-using namespace LibRuntime::NativeClasses;
+using namespace LibRuntime::TJSClasses;
 
-tjs_uint32 SystemNativeClass::ClassID = -1;
+tjs_uint32 SystemClass::ClassID = -1;
 
-SystemNativeClass::SystemNativeClass() : tTJSNativeClass(TJS_W("System")) {
+SystemClass::SystemClass() : tTJSNativeClass(TJS_W("System")) {
     TJS_BEGIN_NATIVE_MEMBERS(System)
         TJS_DECL_EMPTY_FINALIZE_METHOD
 
@@ -61,7 +61,7 @@ SystemNativeClass::SystemNativeClass() : tTJSNativeClass(TJS_W("System")) {
 
         TJS_BEGIN_NATIVE_METHOD_DECL(exit)
                 exit(param[0]->AsInteger());
-                return TJS_S_OK;    //関数が戻ることはないはず
+                return TJS_S_OK;    //髢｢謨ｰ縺梧綾繧九％縺ｨ縺ｯ縺ｪ縺・・縺・
         TJS_END_NATIVE_METHOD_DECL(exit)
 
 
@@ -109,7 +109,7 @@ SystemNativeClass::SystemNativeClass() : tTJSNativeClass(TJS_W("System")) {
                 caption = param[1]->GetString();
             } else {
                 message = param[0]->GetString();
-                caption = TJS_W("通知");
+                caption = TJS_W("騾夂衍");
             }
 
             KrkrRuntime::system_ui->show_dialog(caption, message);
@@ -521,6 +521,6 @@ SystemNativeClass::SystemNativeClass() : tTJSNativeClass(TJS_W("System")) {
     PropSet(TJS_MEMBERENSURE, TJS_W("onDeactivate"), nullptr, &val, this);
 }
 
-tTJSNativeInstance *SystemNativeClass::CreateNativeInstance() {
+tTJSNativeInstance *SystemClass::CreateNativeInstance() {
     return nullptr;
 }

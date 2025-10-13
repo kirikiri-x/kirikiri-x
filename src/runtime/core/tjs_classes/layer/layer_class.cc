@@ -1,16 +1,16 @@
-#include "layer.h"
-#include "../native_instances/layer_instance.h"
+#include "layer_class.h"
+#include "layer_instance.h"
 
-using namespace LibRuntime::NativeClasses;
+using namespace LibRuntime::TJSClasses;
 
-tjs_uint32 LayerNativeClass::ClassID = -1;
+tjs_uint32 LayerClass::ClassID = -1;
 
-LayerNativeClass::LayerNativeClass() : tTJSNativeClass(TJS_W("Layer")) {
-    TJS_BEGIN_NATIVE_MEMBERS(LayerNativeClass)
+LayerClass::LayerClass() : tTJSNativeClass(TJS_W("Layer")) {
+    TJS_BEGIN_NATIVE_MEMBERS(LayerClass)
     {
         TJS_DECL_EMPTY_FINALIZE_METHOD
 
-        TJS_BEGIN_NATIVE_CONSTRUCTOR_DECL(_this, NativeInstances::LayerNativeInstance, Layer)
+        TJS_BEGIN_NATIVE_CONSTRUCTOR_DECL(_this, LayerInstance, Layer)
         {
             return TJS_S_OK;
         }
@@ -24,7 +24,7 @@ LayerNativeClass::LayerNativeClass() : tTJSNativeClass(TJS_W("Layer")) {
         TJS_BEGIN_NATIVE_METHOD_DECL(setPos) {
             if (numparams < 2) return TJS_E_BADPARAMCOUNT;
 
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::LayerNativeInstance)
+            TJS_GET_NATIVE_INSTANCE(_this, LayerInstance)
             if (param[0]->Type() != tvtInteger || param[1]->Type() != tvtInteger) return TJS_E_INVALIDPARAM;
             _this->set_position(param[0]->AsInteger(), param[1]->AsInteger());
 
@@ -40,6 +40,7 @@ LayerNativeClass::LayerNativeClass() : tTJSNativeClass(TJS_W("Layer")) {
     TJS_END_NATIVE_MEMBERS
 }
 
-tTJSNativeInstance *LayerNativeClass::CreateNativeInstance() {
-    return new NativeInstances::LayerNativeInstance();
+tTJSNativeInstance *LayerClass::CreateNativeInstance() {
+    return new LayerInstance();
 }
+

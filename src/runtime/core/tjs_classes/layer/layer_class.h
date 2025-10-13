@@ -2,15 +2,16 @@
 #include <tjs.h>
 #include <tjsNative.h>
 
-namespace LibRuntime::NativeClasses {
+namespace LibRuntime::TJSClasses {
     /**
-     * 短形情報を保持するクラス
+     * Layerクラス - TJS2から使用可能なレイヤークラス
      */
-    class RectNativeClass : public tTJSNativeClass {
+    class LayerClass : public tTJSNativeClass {
     public:
-        RectNativeClass();
+        LayerClass();
 
         static tjs_uint32 ClassID;
         tTJSNativeInstance *CreateNativeInstance() override;
     };
 }
+

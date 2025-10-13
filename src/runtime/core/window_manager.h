@@ -1,15 +1,15 @@
 #pragma once
-#include "native_instances/window_instance.h"
+#include "tjs_classes/window/window_instance.h"
 
 namespace LibRuntime {
     class WindowManager {
     public:
-        static void register_window(NativeInstances::WindowNativeInstance *window);
-        static void unregister_window(NativeInstances::WindowNativeInstance *window);
+        static void register_window(TJSClasses::WindowInstance *window);
+        static void unregister_window(TJSClasses::WindowInstance *window);
         static bool has_windows();
 
     private:
-        static std::vector<NativeInstances::WindowNativeInstance*> windows;
-        static NativeInstances::WindowNativeInstance *main_window;
+        static std::vector<TJSClasses::WindowInstance*> windows;
+        static TJSClasses::WindowInstance *main_window;
     };
 }

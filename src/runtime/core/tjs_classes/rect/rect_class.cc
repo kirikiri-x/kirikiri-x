@@ -1,20 +1,20 @@
-#include "rect.h"
-#include "../script_manager.h"
-#include "../event_manager.h"
-#include "../libruntime.h"
-#include "../native_instances/rect_instance.h"
+#include "rect_class.h"
+#include "../../script_manager.h"
+#include "../../event_manager.h"
+#include "../../libruntime.h"
+#include "rect_instance.h"
 
-using namespace LibRuntime::NativeClasses;
+using namespace LibRuntime::TJSClasses;
 
-tjs_uint32 RectNativeClass::ClassID = -1;
+tjs_uint32 RectClass::ClassID = -1;
 
-RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
+RectClass::RectClass() : tTJSNativeClass(TJS_W("Rect")) {
     TJS_BEGIN_NATIVE_MEMBERS(Rect)
     {
         TJS_DECL_EMPTY_FINALIZE_METHOD
 
         //===== CONSTRUCTOR =====
-        TJS_BEGIN_NATIVE_CONSTRUCTOR_DECL(_this, NativeInstances::RectNativeInstance, Rect)
+        TJS_BEGIN_NATIVE_CONSTRUCTOR_DECL(_this, RectInstance, Rect)
         {
             return TJS_S_OK;
         }
@@ -26,7 +26,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             if (numparams < 2) return TJS_E_BADPARAMCOUNT;
 
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+            TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
             if (param[0]->Type() != tvtInteger || param[1]->Type() != tvtInteger) return TJS_E_INVALIDPARAM;
             _this->add_offset(*param[0], *param[1]);
         }
@@ -35,7 +35,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
 
         TJS_BEGIN_NATIVE_METHOD_DECL(clear)
         {
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+            TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
             _this->clear();
         }
         TJS_END_NATIVE_METHOD_DECL(clear)
@@ -45,12 +45,12 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             if (numparams < 1) return TJS_E_BADPARAMCOUNT;
 
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+            TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
 
-            NativeInstances::RectNativeInstance *rect;
+            RectInstance *rect;
             auto param0Obj = param[0]->AsObjectNoAddRef();
             if (!param0Obj) return TJS_E_NATIVECLASSCRASH;
-            tjs_error hr = param0Obj->NativeInstanceSupport(TJS_NIS_GETINSTANCE, RectNativeClass::ClassID, (iTJSNativeInstance **)&rect);
+            tjs_error hr = param0Obj->NativeInstanceSupport(TJS_NIS_GETINSTANCE, RectClass::ClassID, (iTJSNativeInstance **)&rect);
             if (TJS_FAILED(hr)) return TJS_E_NATIVECLASSCRASH;
 
             auto retval = _this->clip(*rect);
@@ -65,12 +65,12 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             if (numparams < 1) return TJS_E_BADPARAMCOUNT;
 
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+            TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
 
-            NativeInstances::RectNativeInstance *rect;
+            RectInstance *rect;
             auto param0Obj = param[0]->AsObjectNoAddRef();
             if (!param0Obj) return TJS_E_NATIVECLASSCRASH;
-            tjs_error hr = param0Obj->NativeInstanceSupport(TJS_NIS_GETINSTANCE, RectNativeClass::ClassID, (iTJSNativeInstance **)&rect);
+            tjs_error hr = param0Obj->NativeInstanceSupport(TJS_NIS_GETINSTANCE, RectClass::ClassID, (iTJSNativeInstance **)&rect);
             if (TJS_FAILED(hr)) return TJS_E_NATIVECLASSCRASH;
 
             auto retval = _this->equal(*rect);
@@ -85,12 +85,12 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             if (numparams < 1) return TJS_E_BADPARAMCOUNT;
 
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+            TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
 
-            NativeInstances::RectNativeInstance *rect;
+            RectInstance *rect;
             auto param0Obj = param[0]->AsObjectNoAddRef();
             if (!param0Obj) return TJS_E_NATIVECLASSCRASH;
-            tjs_error hr = param0Obj->NativeInstanceSupport(TJS_NIS_GETINSTANCE, RectNativeClass::ClassID, (iTJSNativeInstance **)&rect);
+            tjs_error hr = param0Obj->NativeInstanceSupport(TJS_NIS_GETINSTANCE, RectClass::ClassID, (iTJSNativeInstance **)&rect);
             if (TJS_FAILED(hr)) return TJS_E_NATIVECLASSCRASH;
 
             auto retval = _this->included(*rect);
@@ -105,7 +105,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             if (numparams < 2) return TJS_E_BADPARAMCOUNT;
 
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+            TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
             if (param[0]->Type() != tvtInteger || param[1]->Type() != tvtInteger) return TJS_E_INVALIDPARAM;
 
             auto retval = _this->included_position(*param[0], *param[1]);
@@ -120,12 +120,12 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             if (numparams < 1) return TJS_E_BADPARAMCOUNT;
 
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+            TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
 
-            NativeInstances::RectNativeInstance *rect;
+            RectInstance *rect;
             auto param0Obj = param[0]->AsObjectNoAddRef();
             if (!param0Obj) return TJS_E_NATIVECLASSCRASH;
-            tjs_error hr = param0Obj->NativeInstanceSupport(TJS_NIS_GETINSTANCE, RectNativeClass::ClassID, (iTJSNativeInstance **)&rect);
+            tjs_error hr = param0Obj->NativeInstanceSupport(TJS_NIS_GETINSTANCE, RectClass::ClassID, (iTJSNativeInstance **)&rect);
             if (TJS_FAILED(hr)) return TJS_E_NATIVECLASSCRASH;
 
             auto retval = _this->intersects(*rect);
@@ -138,7 +138,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
 
         TJS_BEGIN_NATIVE_METHOD_DECL(isEmpty)
         {
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+            TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
 
             auto retval = _this->is_empty();
 
@@ -152,7 +152,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             if (numparams < 4) return TJS_E_BADPARAMCOUNT;
 
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+            TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
             if (param[0]->Type() != tvtInteger || param[1]->Type() != tvtInteger || param[2]->Type() != tvtInteger || param[3]->Type() != tvtInteger) return TJS_E_INVALIDPARAM;
 
             _this->set(*param[0], *param[1], *param[2], *param[3]);
@@ -166,7 +166,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             if (numparams < 2) return TJS_E_BADPARAMCOUNT;
 
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+            TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
             if (param[0]->Type() != tvtInteger || param[1]->Type() != tvtInteger) return TJS_E_INVALIDPARAM;
 
             _this->set_offset(*param[0], *param[1]);
@@ -180,7 +180,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             if (numparams < 2) return TJS_E_BADPARAMCOUNT;
 
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+            TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
             if (param[0]->Type() != tvtInteger || param[1]->Type() != tvtInteger) return TJS_E_INVALIDPARAM;
 
             _this->set_size(*param[0], *param[1]);
@@ -194,12 +194,12 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             if (numparams < 1) return TJS_E_BADPARAMCOUNT;
 
-            TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+            TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
 
-            NativeInstances::RectNativeInstance *rect;
+            RectInstance *rect;
             auto param0Obj = param[0]->AsObjectNoAddRef();
             if (!param0Obj) return TJS_E_NATIVECLASSCRASH;
-            tjs_error hr = param0Obj->NativeInstanceSupport(TJS_NIS_GETINSTANCE, RectNativeClass::ClassID, (iTJSNativeInstance **)&rect);
+            tjs_error hr = param0Obj->NativeInstanceSupport(TJS_NIS_GETINSTANCE, RectClass::ClassID, (iTJSNativeInstance **)&rect);
             if (TJS_FAILED(hr)) return TJS_E_NATIVECLASSCRASH;
 
             auto retval = _this->union_rect(*rect);
@@ -215,7 +215,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             TJS_BEGIN_NATIVE_PROP_GETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 *result = _this->rect_.left;
                 return TJS_S_OK;
             }
@@ -223,7 +223,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
 
             TJS_BEGIN_NATIVE_PROP_SETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 _this->rect_.left = *param;
                 return TJS_S_OK;
             }
@@ -236,7 +236,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             TJS_BEGIN_NATIVE_PROP_GETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 *result = _this->rect_.right;
                 return TJS_S_OK;
             }
@@ -244,7 +244,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
 
             TJS_BEGIN_NATIVE_PROP_SETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 _this->rect_.right = *param;
                 return TJS_S_OK;
             }
@@ -257,7 +257,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             TJS_BEGIN_NATIVE_PROP_GETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 *result = _this->rect_.top;
                 return TJS_S_OK;
             }
@@ -265,7 +265,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
 
             TJS_BEGIN_NATIVE_PROP_SETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 _this->rect_.top = *param;
                 return TJS_S_OK;
             }
@@ -278,7 +278,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             TJS_BEGIN_NATIVE_PROP_GETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 *result = _this->rect_.bottom;
                 return TJS_S_OK;
             }
@@ -286,7 +286,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
 
             TJS_BEGIN_NATIVE_PROP_SETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 _this->rect_.bottom = *param;
                 return TJS_S_OK;
             }
@@ -299,7 +299,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             TJS_BEGIN_NATIVE_PROP_GETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 *result = _this->rect_.right - _this->rect_.left;
                 return TJS_S_OK;
             }
@@ -307,7 +307,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
 
             TJS_BEGIN_NATIVE_PROP_SETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 _this->set_size(*param, _this->rect_.bottom - _this->rect_.top);
                 return TJS_S_OK;
             }
@@ -320,7 +320,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             TJS_BEGIN_NATIVE_PROP_GETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 *result = _this->rect_.bottom - _this->rect_.top;
                 return TJS_S_OK;
             }
@@ -328,7 +328,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
 
             TJS_BEGIN_NATIVE_PROP_SETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 _this->set_size(_this->rect_.right - _this->rect_.left, *param);
                 return TJS_S_OK;
             }
@@ -341,7 +341,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
         {
             TJS_BEGIN_NATIVE_PROP_GETTER
             {
-                TJS_GET_NATIVE_INSTANCE(_this, NativeInstances::RectNativeInstance);
+                TJS_GET_NATIVE_INSTANCE(_this, RectInstance);
                 *result = tTJSVariant(reinterpret_cast<tTVInteger>(&_this->rect_));
                 return TJS_S_OK;
             }
@@ -355,6 +355,7 @@ RectNativeClass::RectNativeClass() : tTJSNativeClass(TJS_W("Rect")) {
     TJS_END_NATIVE_MEMBERS
 }
 
-tTJSNativeInstance *RectNativeClass::CreateNativeInstance() {
-    return new NativeInstances::RectNativeInstance();
+tTJSNativeInstance *RectClass::CreateNativeInstance() {
+    return new RectInstance();
 }
+

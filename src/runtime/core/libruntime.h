@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <vector>
 #include "interfaces/filesystem.h"
 #include "interfaces/console.h"
 #include "interfaces/sysfunc.h"
@@ -33,6 +34,8 @@ namespace LibRuntime {
         static Interfaces::ISysFunc *sysfunc;
         static Interfaces::ISystemUI *system_ui;
         static Interfaces::IEnvironment *environment;
+
+        static std::vector<ttstr> auto_paths;
 
     private:
         static bool interpreter();

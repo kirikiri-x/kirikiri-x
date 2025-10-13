@@ -17,6 +17,7 @@ Interfaces::ISysFunc* KrkrRuntime::sysfunc = new Interfaces::SysFuncFallbackImpl
 Interfaces::ISystemUI* KrkrRuntime::system_ui = new Interfaces::SystemUIFallbackImpl();
 Interfaces::IEnvironment* KrkrRuntime::environment = new Interfaces::EnvironmentFallbackImpl();
 std::map<tjs_string, tjs_string> KrkrRuntime::arguments;
+std::vector<ttstr> KrkrRuntime::auto_paths;
 bool KrkrRuntime::quit_required = false;
 int KrkrRuntime::quit_code = 0;
 

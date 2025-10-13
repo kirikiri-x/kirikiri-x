@@ -11,10 +11,10 @@ namespace LibRuntime {
         class LayerTree;
     }
 
-    namespace NativeInstances {
-        class WindowNativeInstance : public tTJSNativeInstance {
+    namespace TJSClasses {
+        class WindowInstance : public tTJSNativeInstance {
         public:
-            WindowNativeInstance();
+            WindowInstance();
             tjs_error TJS_INTF_METHOD Construct(tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *tjs_obj) override;
             void TJS_INTF_METHOD Invalidate() override;
 
@@ -34,3 +34,4 @@ namespace LibRuntime {
     }
 
 }
+

@@ -2,19 +2,19 @@
 #include <tjs.h>
 #include <tjsNative.h>
 #include "layer_instance.h"
-#include "window_instance.h"
-#include "../libruntime.h"
-#include "../native_classes/window.h"
-#include "../native_classes/layer.h"
-#include "../rendering/layer_tree.h"
+#include "../window/window_instance.h"
+#include "../../libruntime.h"
+#include "../window/window_class.h"
+#include "layer_class.h"
+#include "../../rendering/layer_tree.h"
 
-using namespace LibRuntime::NativeInstances;
+using namespace LibRuntime::TJSClasses;
 
-LayerNativeInstance::LayerNativeInstance() {
+LayerInstance::LayerInstance() {
 
 }
 
-tjs_error LayerNativeInstance::Construct(tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *tjs_obj) {
+tjs_error LayerInstance::Construct(tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *tjs_obj) {
     if (numparams < 2) return TJS_E_BADPARAMCOUNT;
 
     // ウィンドウのオブジェクトを取得
@@ -27,8 +27,8 @@ tjs_error LayerNativeInstance::Construct(tjs_int numparams, tTJSVariant **param,
         parent_layer.Release();
 
         // 親レイヤーがNullの場合は，自身がプライマリレイヤーとなる
-        WindowNativeInstance *window_instance;
-        auto nis_result = window.ObjThis->NativeInstanceSupport(TJS_NIS_GETINSTANCE, NativeClasses::WindowNativeClass::ClassID, reinterpret_cast<iTJSNativeInstance **>(&window_instance));
+        WindowInstance *window_instance;
+        auto nis_result = window.ObjThis->NativeInstanceSupport(TJS_NIS_GETINSTANCE, WindowClass::ClassID, reinterpret_cast<iTJSNativeInstance **>(&window_instance));
         if (TJS_FAILED(nis_result)) return TJS_E_INVALIDPARAM;
 
         auto layer_tree = window_instance->get_layer_tree();
@@ -36,8 +36,8 @@ tjs_error LayerNativeInstance::Construct(tjs_int numparams, tTJSVariant **param,
         layer_tree->add_primary_layer(this);
     } else {
         // 親レイヤーがある場合は，親レイヤーの子に自身を登録
-        LayerNativeInstance *parent_layer_instance;
-        auto nis_result = parent_layer.ObjThis->NativeInstanceSupport(TJS_NIS_GETINSTANCE, NativeClasses::LayerNativeClass::ClassID, reinterpret_cast<iTJSNativeInstance **>(&parent_layer_instance));
+        LayerInstance *parent_layer_instance;
+        auto nis_result = parent_layer.ObjThis->NativeInstanceSupport(TJS_NIS_GETINSTANCE, LayerClass::ClassID, reinterpret_cast<iTJSNativeInstance **>(&parent_layer_instance));
         if (TJS_FAILED(nis_result)) return TJS_E_INVALIDPARAM;
 
         parent_layer_instance->add_children(this);
@@ -49,7 +49,7 @@ tjs_error LayerNativeInstance::Construct(tjs_int numparams, tTJSVariant **param,
     return TJS_S_OK;
 }
 
-void LayerNativeInstance::Invalidate() {
+void LayerInstance::Invalidate() {
     for (auto child : _children) {
         child->Invalidate();
     }
@@ -60,28 +60,28 @@ void LayerNativeInstance::Invalidate() {
     tTJSNativeInstance::Invalidate();
 }
 
-void LayerNativeInstance::add_children(LayerNativeInstance *child) {
+void LayerInstance::add_children(LayerInstance *child) {
     if (std::find(_children.begin(), _children.end(), child) != _children.end()) return;
     _children.push_back(child);
 }
 
-void LayerNativeInstance::remove_children(LayerNativeInstance *child) {
+void LayerInstance::remove_children(LayerInstance *child) {
     auto iter = std::find(_children.begin(), _children.end(), child);
     if (iter == _children.end()) return;
     _children.erase(iter);
 }
 
-void LayerNativeInstance::set_position(tjs_int x, tjs_int y) {
+void LayerInstance::set_position(tjs_int x, tjs_int y) {
     _renderRect.x = x;
     _renderRect.y = y;
 }
 
-void LayerNativeInstance::set_size(tjs_int width, tjs_int height) {
+void LayerInstance::set_size(tjs_int width, tjs_int height) {
     _renderRect.w = width;
     _renderRect.h = height;
 }
 
-SDL_Texture *LayerNativeInstance::render(SDL_Renderer *renderer) {
+SDL_Texture *LayerInstance::render(SDL_Renderer *renderer) {
     auto base_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, _renderRect.w, _renderRect.h);
     SDL_SetTextureBlendMode(base_texture, SDL_BLENDMODE_NONE);
     SDL_SetRenderTarget(renderer, base_texture);
@@ -109,3 +109,4 @@ SDL_Texture *LayerNativeInstance::render(SDL_Renderer *renderer) {
 
     return base_texture;
 }
+

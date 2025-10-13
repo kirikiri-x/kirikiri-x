@@ -3,18 +3,18 @@
 #include <SDL.h>
 
 namespace LibRuntime {
-    namespace NativeInstances {
-        class LayerNativeInstance;
+    namespace TJSClasses {
+        class LayerInstance;
     }
 
     namespace Rendering {
         class LayerTree {
         public:
-            void add_primary_layer(NativeInstances::LayerNativeInstance *layer);
-            void remove_primary_layer(NativeInstances::LayerNativeInstance *layer);
+            void add_primary_layer(TJSClasses::LayerInstance *layer);
+            void remove_primary_layer(TJSClasses::LayerInstance *layer);
             void render(SDL_Renderer *renderer);
         private:
-            std::vector<NativeInstances::LayerNativeInstance *> primary_layers;
+            std::vector<TJSClasses::LayerInstance *> primary_layers;
         };
     }
 }

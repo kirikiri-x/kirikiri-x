@@ -1,13 +1,13 @@
-#include <tjsCommHead.h>
+﻿#include <tjsCommHead.h>
 #include <tjsTypes.h>
-#include "minimal.h"
-#include "../libruntime.h"
+#include "minimal_class.h"
+#include "../../libruntime.h"
 
-using namespace LibRuntime::NativeClasses;
+using namespace LibRuntime::TJSClasses;
 
-tjs_uint32 MinimalNativeClass::ClassID = -1;
+tjs_uint32 MinimalClass::ClassID = -1;
 
-MinimalNativeClass::MinimalNativeClass() : tTJSNativeClass(TJS_W("mini")) {
+MinimalClass::MinimalClass() : tTJSNativeClass(TJS_W("mini")) {
     TJS_BEGIN_NATIVE_MEMBERS(mini)
     TJS_DECL_EMPTY_FINALIZE_METHOD
         // constructor
@@ -30,6 +30,6 @@ MinimalNativeClass::MinimalNativeClass() : tTJSNativeClass(TJS_W("mini")) {
     TJS_END_NATIVE_MEMBERS
 }
 
-tTJSNativeInstance *MinimalNativeClass::CreateNativeInstance() {
+tTJSNativeInstance *MinimalClass::CreateNativeInstance() {
     return nullptr;
 }

@@ -3,15 +3,15 @@
 #include <tjsNative.h>
 #include <SDL.h>
 
-namespace LibRuntime::NativeInstances {
-    class LayerNativeInstance : public tTJSNativeInstance {
+namespace LibRuntime::TJSClasses {
+    class LayerInstance : public tTJSNativeInstance {
     public:
-        LayerNativeInstance();
+        LayerInstance();
         tjs_error TJS_INTF_METHOD Construct(tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *tjs_obj);
         void TJS_INTF_METHOD Invalidate();
 
-        void add_children(LayerNativeInstance *child);
-        void remove_children(LayerNativeInstance *child);
+        void add_children(LayerInstance *child);
+        void remove_children(LayerInstance *child);
         void set_position(tjs_int x, tjs_int y);
         void set_size(tjs_int width, tjs_int height);
         void set_visible(bool visible);
@@ -23,8 +23,9 @@ namespace LibRuntime::NativeInstances {
     private:
         tTJSVariantClosure _owner_window;
         tTJSVariantClosure _parent_layer;
-        std::vector<LayerNativeInstance *> _children;
+        std::vector<LayerInstance *> _children;
 
         SDL_Rect _renderRect;
     };
 }
+

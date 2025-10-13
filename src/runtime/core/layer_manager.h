@@ -1,17 +1,17 @@
 #pragma once
-#include "./native_instances/layer_instance.h"
+#include "./tjs_classes/layer/layer_instance.h"
 
-using namespace LibRuntime::NativeInstances;
+using namespace LibRuntime::TJSClasses;
 
 namespace LibRuntime {
     class LayerManager {
     public:
-        LayerManager(LayerNativeInstance *primary_layer) {};
-        void add_child_layer(LayerNativeInstance *layer) {};
-        void remove_child_layer(LayerNativeInstance *layer) {};
+        LayerManager(LayerInstance *primary_layer) {};
+        void add_child_layer(LayerInstance *layer) {};
+        void remove_child_layer(LayerInstance *layer) {};
 
     private:
-        LayerNativeInstance *primary_layer;
-        std::vector<LayerNativeInstance*> layers;
+        LayerInstance *primary_layer;
+        std::vector<LayerInstance*> layers;
     };
 }

@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
-#include <native_instances/rect_instance.h>
+#include <tjs_classes/rect/rect_instance.h>
+#include <tjs_classes/rect/rect_class.h>
 
 #define PROPERTY_EXPECT_EQ(dispatch, propname, expected) \
     tTJSVariant result_macro_##propname; \
@@ -26,7 +27,7 @@
     auto cleanup_##name = [&]() { delete name[0]; delete name[1]; delete name[2]; delete name[3]; delete[] name; };
 
 TEST(CoreNativeInstances_RectTest, EqualProperties) {
-    auto rect_nc = LibRuntime::NativeClasses::RectNativeClass();
+    auto rect_nc = LibRuntime::TJSClasses::RectClass();
     iTJSDispatch2 *rect;
 
     BUILD_QUADRUPLE_PARAMS(rectParam, 10, 12, 24, 58);
@@ -45,7 +46,7 @@ TEST(CoreNativeInstances_RectTest, EqualProperties) {
 }
 
 TEST(CoreNativeInstances_RectTest, addOffset) {
-    auto rect_nc = LibRuntime::NativeClasses::RectNativeClass();
+    auto rect_nc = LibRuntime::TJSClasses::RectClass();
     iTJSDispatch2 *rect;
 
     BUILD_QUADRUPLE_PARAMS(rectParam, 10, 12, 24, 58);
@@ -70,7 +71,7 @@ TEST(CoreNativeInstances_RectTest, addOffset) {
 
 TEST(CoreNativeInstances_RectTest, clear)
 {
-    auto rect_nc = LibRuntime::NativeClasses::RectNativeClass();
+    auto rect_nc = LibRuntime::TJSClasses::RectClass();
     iTJSDispatch2 *rect;
     tTJSVariant funcResult;
 
@@ -92,7 +93,7 @@ TEST(CoreNativeInstances_RectTest, clear)
 
 TEST(CoreNativeInstances_RectTest, clip)
 {
-    auto rect_nc = LibRuntime::NativeClasses::RectNativeClass();
+    auto rect_nc = LibRuntime::TJSClasses::RectClass();
     iTJSDispatch2 *rect1, *rect2;
     tTJSVariant funcResult;
 
@@ -120,7 +121,7 @@ TEST(CoreNativeInstances_RectTest, clip)
 
 TEST(CoreNativeInstances_RectTest, equal)
 {
-    auto rect_nc = LibRuntime::NativeClasses::RectNativeClass();
+    auto rect_nc = LibRuntime::TJSClasses::RectClass();
     iTJSDispatch2 *rect1, *rect2;
     tTJSVariant funcResult, funcResult2;
 

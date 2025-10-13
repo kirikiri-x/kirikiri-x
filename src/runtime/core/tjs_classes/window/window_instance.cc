@@ -1,16 +1,16 @@
 #include "window_instance.h"
-#include "../window_manager.h"
-#include "../rendering/layer_tree.h"
+#include "../../window_manager.h"
+#include "../../rendering/layer_tree.h"
 #include <algorithm>
-#include "../event_manager.h"
+#include "../../event_manager.h"
 
-using namespace LibRuntime::NativeInstances;
+using namespace LibRuntime::TJSClasses;
 
-WindowNativeInstance::WindowNativeInstance() {
+WindowInstance::WindowInstance() {
 
 }
 
-tjs_error TJS_INTF_METHOD WindowNativeInstance::Construct(tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *tjs_obj) {
+tjs_error TJS_INTF_METHOD WindowInstance::Construct(tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *tjs_obj) {
     this->window = SDL_CreateWindow(TJS_N("Window"), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 300, 300, 0);
     this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED);
     this->layer_tree = std::make_shared<Rendering::LayerTree>();
@@ -19,7 +19,7 @@ tjs_error TJS_INTF_METHOD WindowNativeInstance::Construct(tjs_int numparams, tTJ
     return TJS_S_OK;
 }
 
-void TJS_INTF_METHOD WindowNativeInstance::Invalidate() {
+void TJS_INTF_METHOD WindowInstance::Invalidate() {
     for (auto &obj : objects) {
         obj.Release();
     }
@@ -34,14 +34,14 @@ void TJS_INTF_METHOD WindowNativeInstance::Invalidate() {
     EventManager::remove_window_instance(this);
 }
 
-void WindowNativeInstance::add_object(tTJSVariantClosure clo) {
+void WindowInstance::add_object(tTJSVariantClosure clo) {
     if (objects.end() != std::find(objects.begin(), objects.end(), clo)) return;
 
     objects.push_back(clo);
     clo.AddRef();
 }
 
-void WindowNativeInstance::remove_object(tTJSVariantClosure clo) {
+void WindowInstance::remove_object(tTJSVariantClosure clo) {
     auto it = std::find(objects.begin(), objects.end(), clo);
     if (it == objects.end()) return;
 
@@ -49,17 +49,17 @@ void WindowNativeInstance::remove_object(tTJSVariantClosure clo) {
     clo.Release();
 }
 
-void WindowNativeInstance::update() {
+void WindowInstance::update() {
     SDL_RenderClear(this->renderer);
     layer_tree->render(this->renderer);
     SDL_RenderPresent(this->renderer);
 }
 
-void WindowNativeInstance::bring_to_front() {
+void WindowInstance::bring_to_front() {
     SDL_RaiseWindow(this->window);
 }
 
-std::shared_ptr<LibRuntime::Rendering::LayerTree> WindowNativeInstance::get_layer_tree() {
+std::shared_ptr<LibRuntime::Rendering::LayerTree> WindowInstance::get_layer_tree() {
     return layer_tree;
 }
 
