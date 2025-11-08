@@ -74,7 +74,7 @@ void LinuxSystemUI::show_version_dialog()
         ttstr version_text;
         std::string version_text_out;
         LibRuntime::KrkrRuntime::get_runtime_version_full(version_text);
-        TVPUtf16ToUtf8(version_text_out, version_text);
+        TVPUtf16ToUtf8(version_text_out, version_text.c_str());
 
         gtk_show_about_dialog(nullptr,
             "program-name", "吉里吉里X",

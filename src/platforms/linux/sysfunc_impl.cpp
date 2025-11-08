@@ -1,8 +1,8 @@
 #include "sysfunc_impl.h"
 
-bool UnixSysFunc::create_app_lock(const tjs_char *lockname) {
+bool UnixSysFunc::create_app_lock(const ttstr &lockname) {
     std::string str;
-    TVPUtf16ToUtf8(str, lockname);
+    TVPUtf16ToUtf8(str, lockname.c_str());
 
     str += ".sock";
 
@@ -30,12 +30,4 @@ void UnixSysFunc::release_all_app_lock() {
         close(app_lock.first);
         unlink(app_lock.second.c_str());
     }
-}
-
-void UnixSysFunc::get_os_name(ttstr &os_name) {
-    struct utsname uname_buf;
-    uname(&uname_buf);
-
-    ttstr sysname(uname_buf.sysname);
-    os_name = sysname.AsStdString();
 }
