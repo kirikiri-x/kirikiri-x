@@ -12,7 +12,7 @@ void WindowsSysFunc::execute(const ttstr &program, const ttstr &params)
     }
 
     std::string narrow_text;
-    TVPUtf16ToUtf8(narrow_text, system_text.c_str());
+    TVPUtf16ToUtf8(narrow_text, system_text.AsStdString());
     system(narrow_text.c_str());
 }
 

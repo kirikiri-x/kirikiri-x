@@ -83,7 +83,7 @@ bool WindowsFileSystem::get_savedata_directory(ttstr &result) {
         return false;
     }
 
-    result = ttstr(combined_path);
+    result = combined_path;
     return true;
 }
 
