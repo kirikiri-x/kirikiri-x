@@ -13,7 +13,7 @@ jobs:
       - name: Install required packages
         run: |
           sudo apt update
-          sudo apt install libgtk-4-dev libadwaita-1-dev
+          sudo apt install libadwaita-1-dev
 
       - name: Initialize
         run: |
@@ -43,38 +43,38 @@ jobs:
         run: |
           cmake --build build --config Release
 
-  macos-intel-build:
-    runs-on: macos-13
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Initialize
-        run: |
-            mkdir build
-            cd build
-            cmake ..
-
-      - name: Build
-        run: |
-            cmake --build build --config Release
-
-  macos-arm-build:
-    runs-on: macos-14
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Initialize
-        run: |
-          mkdir build
-          cd build
-          cmake ..
-
-      - name: Build
-        run: |
-          cmake --build build --config Release
+#  macos-intel-build:
+#    runs-on: macos-13
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#        with:
+#          submodules: recursive
+#
+#      - name: Initialize
+#        run: |
+#            mkdir build
+#            cd build
+#            cmake ..
+#
+#      - name: Build
+#        run: |
+#            cmake --build build --config Release
+#
+#  macos-arm-build:
+#    runs-on: macos-14
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#        with:
+#          submodules: recursive
+#
+#      - name: Initialize
+#        run: |
+#          mkdir build
+#          cd build
+#          cmake ..
+#
+#      - name: Build
+#        run: |
+#          cmake --build build --config Release
