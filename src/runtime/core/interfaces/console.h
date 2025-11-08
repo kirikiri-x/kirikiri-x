@@ -27,7 +27,7 @@ namespace LibRuntime::Interfaces {
 
         size_t readline(ttstr &result) {
 #ifndef _MSC_VER
-                        std::string input_text;
+            std::string input_text;
             std::getline(std::cin, input_text);
 
             result = ttstr(input_text.c_str());
