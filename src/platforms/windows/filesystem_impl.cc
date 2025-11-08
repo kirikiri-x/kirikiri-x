@@ -10,11 +10,11 @@ using namespace LibRuntime::Storage;
 
 size_t WindowsFileSystem::get_current_directory(ttstr &result) {
     DWORD buflen = GetCurrentDirectoryW(0, nullptr);
-    if (result == nullptr) {
-        return buflen;
+    if (buflen == 0) {
+        result.Clear();
+        return 0;
     }
-
-    tjs_char *buf = new tjs_char[buflen + 1];
+    auto *buf = new tjs_char[buflen + 1];
     DWORD written = GetCurrentDirectoryW(buflen, reinterpret_cast<LPWSTR>(buf));
     result = ttstr(buf);
     delete[] buf;

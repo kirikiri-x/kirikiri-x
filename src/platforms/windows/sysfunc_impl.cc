@@ -6,7 +6,7 @@ void WindowsSysFunc::execute(const ttstr &program, const ttstr &params)
 {
     ttstr system_text;
     system_text += program;
-    if (params != nullptr) {
+    if (!params.IsEmpty()) {
         system_text += TJS_W(" ");
         system_text += params;
     }

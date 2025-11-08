@@ -1,23 +1,23 @@
 #include "console_impl.h"
 
 void WindowsConsole::write(const ttstr &text) {
-    const wchar_t *wtext = reinterpret_cast<LPCWSTR>(text.c_str());
-    int mbsize = WideCharToMultiByte(CP_UTF8, 0, wtext, -1, NULL, 0, NULL, NULL);
+    const auto *wtext = reinterpret_cast<LPCWSTR>(text.c_str());
+    int mbsize = WideCharToMultiByte(CP_UTF8, 0, wtext, -1, nullptr, 0, nullptr, nullptr);
 
     auto mbstr = new char[mbsize];
-    WideCharToMultiByte(CP_UTF8, 0, wtext, -1, mbstr, mbsize, NULL, NULL);
+    WideCharToMultiByte(CP_UTF8, 0, wtext, -1, mbstr, mbsize, nullptr, nullptr);
     std::cout << mbstr;
-    delete mbstr;
+    delete[] mbstr;
 }
 
 void WindowsConsole::error(const ttstr &text) {
-    const wchar_t *wtext = reinterpret_cast<LPCWSTR>(text.c_str());
-    int mbsize = WideCharToMultiByte(CP_UTF8, 0, wtext, -1, nullptr, 0, NULL, NULL);
+    const auto *wtext = reinterpret_cast<LPCWSTR>(text.c_str());
+    int mbsize = WideCharToMultiByte(CP_UTF8, 0, wtext, -1, nullptr, 0, nullptr, nullptr);
 
     auto mbstr = new char[mbsize];
-    WideCharToMultiByte(CP_UTF8, 0, wtext, -1, mbstr, mbsize, NULL, NULL);
+    WideCharToMultiByte(CP_UTF8, 0, wtext, -1, mbstr, mbsize, nullptr, nullptr);
     std::cerr << mbstr;
-    delete mbstr;
+    delete[] mbstr;
 }
 
 size_t WindowsConsole::readline(ttstr &result) {
