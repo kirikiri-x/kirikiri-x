@@ -10,7 +10,7 @@ namespace LibRuntime::Interfaces {
     class IFileSystem {
     public:
         // カレントディレクトリ
-        virtual size_t get_current_directory(tjs_char *result) = 0;
+        virtual size_t get_current_directory(ttstr &result) = 0;
         virtual bool set_current_directory(const ttstr &path) = 0;
 
         // ファイル開閉
@@ -39,7 +39,7 @@ namespace LibRuntime::Interfaces {
      */
     class FileSystemFallbackImpl : public IFileSystem {
     public:
-        size_t get_current_directory(tjs_char *result) override {
+        size_t get_current_directory(ttstr &result) override {
             return -1;
         };
         bool set_current_directory(const ttstr &path) override {

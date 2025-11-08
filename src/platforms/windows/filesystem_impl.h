@@ -3,13 +3,13 @@
 
 class WindowsFileSystem: public LibRuntime::Interfaces::IFileSystem {
 public:
-    size_t get_current_directory(tjs_char *result) override;
-    bool set_current_directory(const tjs_char *path) override;
+    size_t get_current_directory(ttstr &result) override;
+    bool set_current_directory(const ttstr &path) override;
 
-    tTJSBinaryStream *open(const tjs_char *path, tjs_uint32 flags) override;
+    tTJSBinaryStream *open(const ttstr &path, tjs_uint32 flags) override;
 
-    bool file_exists(const tjs_char *path) override;
-    bool directory_exists(const tjs_char *path) override;
+    bool file_exists(const ttstr &path) override;
+    bool directory_exists(const ttstr &path) override;
 
     tjs_int get_maxpath_length() override;
     bool get_home_directory(ttstr &result) override;

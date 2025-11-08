@@ -108,7 +108,7 @@ ttstr KrkrRuntime::get_about_text()
 }
 
 bool KrkrRuntime::interpreter() {
-    console->write(Messages::LRInterpreterMode);
+    console->write(ttstr(Messages::LRInterpreterMode));
     while (!quit_required) {
         EventManager::dispatch_continuous_event();
         ttstr readresult;

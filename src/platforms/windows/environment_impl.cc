@@ -10,7 +10,7 @@ bool WindowsEnvironment::get_execution_path(ttstr &out) {
     if (GetModuleFileNameW(nullptr, path, MAX_PATH) == 0) {
         return false; // Failed to get the execution path
     }
-    out = path;
+    out = ttstr(path);
     return true;
 }
 
@@ -19,7 +19,7 @@ bool WindowsEnvironment::get_personal_path(ttstr &out) {
     if (SHGetFolderPathW(nullptr, CSIDL_PERSONAL, nullptr, 0, path) != S_OK) {
         return false; // Failed to get the personal path
     }
-    out = path;
+    out = ttstr(path);
     return true;
 }
 
@@ -29,12 +29,12 @@ bool WindowsEnvironment::get_saved_games_path(ttstr &out) {
     if (SHGetKnownFolderPath(FOLDERID_SavedGames, KF_FLAG_CREATE, nullptr, &path) != S_OK) {
         return false; // Failed to get the saved games path
     }
-    out = path;
+    out = ttstr(path);
     return true;
 }
 
 bool WindowsEnvironment::get_platform_name(ttstr &out) {
-    if (sizeof(void*) == 8) {
+    if constexpr (sizeof(void*) == 8) {
         out = TJS_W("Win64");
     } else {
         out = TJS_W("Win32");
@@ -80,11 +80,11 @@ bool WindowsEnvironment::get_os_name(ttstr &os_name) {
         osname += TJS_W("Unknown");
     }
     osname += TJS_W(" ");
-    osname += std::to_wstring(osvi.dwMajorVersion);
+    osname += std::to_string(osvi.dwMajorVersion).c_str();
     osname += TJS_W(".");
-    osname += std::to_wstring(osvi.dwMinorVersion);
+    osname += std::to_string(osvi.dwMinorVersion).c_str();
     osname += TJS_W(".");
-    osname += std::to_wstring(osvi.dwBuildNumber);
+    osname += std::to_string(osvi.dwBuildNumber).c_str();
     osname += TJS_W(" (");
     if (osvi.wProductType == VER_NT_WORKSTATION) {
         osname += TJS_W("Workstation");

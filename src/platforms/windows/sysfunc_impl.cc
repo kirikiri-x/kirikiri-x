@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <rpc.h>
 
-void WindowsSysFunc::execute(const tjs_char* program, const tjs_char* params)
+void WindowsSysFunc::execute(const ttstr &program, const ttstr &params)
 {
     ttstr system_text;
     system_text += program;
@@ -12,11 +12,11 @@ void WindowsSysFunc::execute(const tjs_char* program, const tjs_char* params)
     }
 
     std::string narrow_text;
-    TVPUtf16ToUtf8(narrow_text, system_text);
+    TVPUtf16ToUtf8(narrow_text, system_text.c_str());
     system(narrow_text.c_str());
 }
 
-bool WindowsSysFunc::create_app_lock(const tjs_char* lockname)
+bool WindowsSysFunc::create_app_lock(const ttstr &lockname)
 {
     return true;
 }

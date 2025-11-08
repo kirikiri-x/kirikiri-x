@@ -5,8 +5,8 @@
 
 class WindowsSysFunc: public LibRuntime::Interfaces::ISysFunc {
 public:
-    void execute(const tjs_char *program, const tjs_char *params) override;
-    bool create_app_lock(const tjs_char *lockname) override;
+    void execute(const ttstr &program, const ttstr &params) override;
+    bool create_app_lock(const ttstr &lockname) override;
     unsigned long long get_tick_time() override;
     ttstr get_uuid() override;
 };

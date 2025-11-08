@@ -194,7 +194,7 @@ SystemNativeClass::SystemNativeClass() : tTJSNativeClass(TJS_W("System")) {
                         result->Clear();
                         return TJS_E_FAIL;
                     }
-                    *result = LibRuntime::Storage::UnifiedStoragePath(KrkrRuntime::filesystem->get_unified_storage_path(app_data_path));
+                    *result = static_cast<ttstr>(Storage::UnifiedStoragePath(KrkrRuntime::filesystem->get_unified_storage_path(app_data_path)));
                     return TJS_S_OK;
                 }
             TJS_END_NATIVE_PROP_GETTER

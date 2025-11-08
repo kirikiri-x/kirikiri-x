@@ -1,3 +1,5 @@
+#include <SDL.h>
+#include <SDL_main.h>
 #include "filesystem_impl.h"
 #include "console_impl.h"
 #include "libruntime.h"

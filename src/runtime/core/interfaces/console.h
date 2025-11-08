@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "tjsTypes.h"
+#include "tjs.h"
 #include "encodings/CharacterSet.h"
 
 namespace LibRuntime::Interfaces {
