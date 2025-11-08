@@ -7,22 +7,22 @@ namespace LibRuntime::Storage {
         UnifiedStoragePath(const ttstr &media_name, const ttstr &domain_name, const ttstr &path);
         ~UnifiedStoragePath();
 
-        ttstr get_media_name() const;
-        ttstr get_domain_name() const;
-        ttstr get_path() const;
+        [[nodiscard]] ttstr get_media_name() const;
+        [[nodiscard]] ttstr get_domain_name() const;
+        [[nodiscard]] ttstr get_path() const;
 
         void set_media_name(const ttstr &media_name);
         void set_domain_name(const ttstr &domain_name);
         void set_path(const ttstr &path);
 
-        ttstr get_fullpath() const;
+        [[nodiscard]] ttstr get_fullpath() const;
 
         // ユーティリティ
-        UnifiedStoragePath parent_directory() const;
-        ttstr filename() const;
-        ttstr extension() const;
+        [[nodiscard]] UnifiedStoragePath parent_directory() const;
+        [[nodiscard]] ttstr filename() const;
+        [[nodiscard]] ttstr extension() const;
 
-        operator ttstr() const {
+        explicit operator ttstr() const {
             return get_fullpath();
         }
 

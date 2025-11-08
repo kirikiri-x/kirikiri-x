@@ -20,10 +20,10 @@ namespace LibRuntime {
         constexpr static int LIBRUNTIME_VERSION_PATCH = 1;
 
         static int start_runtime(int argc, char *argv[]);
-        static bool get_argument(const tjs_string &name, tjs_string &result);
-        static void set_argument(const tjs_string &name, const tjs_string &value);
-        static void get_runtime_version(tjs_string &verstr);
-        static void get_runtime_version_full(tjs_string &verstr);
+        static bool get_argument(const ttstr &name, ttstr &result);
+        static void set_argument(const ttstr &name, const ttstr &value);
+        static void get_runtime_version(ttstr &verstr);
+        static void get_runtime_version_full(ttstr &verstr);
         static ttstr get_about_text();
 
         static void request_quit(int code);
@@ -37,7 +37,7 @@ namespace LibRuntime {
     private:
         static bool interpreter();
         static void parse_args(int argc, char *argv[]);
-        static std::map<tjs_string, tjs_string> arguments;
+        static std::map<ttstr, ttstr> arguments;
         static bool quit_required;
         static int quit_code;
     };

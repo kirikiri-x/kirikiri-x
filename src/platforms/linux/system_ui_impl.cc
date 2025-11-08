@@ -71,7 +71,7 @@ void LinuxSystemUI::show_version_dialog()
         std::string about_text_out;
         TVPUtf16ToUtf8(about_text_out, about_text.c_str());
 
-        tjs_string version_text;
+        ttstr version_text;
         std::string version_text_out;
         LibRuntime::KrkrRuntime::get_runtime_version_full(version_text);
         TVPUtf16ToUtf8(version_text_out, version_text);

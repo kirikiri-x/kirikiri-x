@@ -11,27 +11,27 @@ namespace LibRuntime::Interfaces {
     public:
         // カレントディレクトリ
         virtual size_t get_current_directory(tjs_char *result) = 0;
-        virtual bool set_current_directory(const tjs_char *path) = 0;
+        virtual bool set_current_directory(const ttstr &path) = 0;
 
         // ファイル開閉
-        virtual tTJSBinaryStream *open(const tjs_char *path, tjs_uint32 flags) = 0;
+        virtual tTJSBinaryStream *open(const ttstr &path, tjs_uint32 flags) = 0;
 
         // 存在確認
-        virtual bool file_exists(const tjs_char *path) = 0;
-        virtual bool directory_exists(const tjs_char *path) = 0;
+        virtual bool file_exists(const ttstr &path) = 0;
+        virtual bool directory_exists(const ttstr &path) = 0;
 
         // ファイルシステム情報関連
         virtual tjs_int get_maxpath_length() = 0;
-        virtual bool get_home_directory(tjs_string &result) = 0;
-        virtual bool get_appdata_directory(tjs_string &result) = 0;
-        virtual bool get_savedata_directory(tjs_string &result) = 0;
+        virtual bool get_home_directory(ttstr &result) = 0;
+        virtual bool get_appdata_directory(ttstr &result) = 0;
+        virtual bool get_savedata_directory(ttstr &result) = 0;
 
         // ユーティリティ
-        virtual bool path_combine(const tjs_string &path1, const tjs_string &path2, tjs_string &result) = 0;
+        virtual bool path_combine(const ttstr &path1, const ttstr &path2, ttstr &result) = 0;
 
         // ユニファイドストレージパス
-        virtual LibRuntime::Storage::UnifiedStoragePath get_unified_storage_path(const tjs_string &path) = 0;
-        virtual tjs_string get_filesystem_path(const LibRuntime::Storage::UnifiedStoragePath &path) = 0;
+        virtual LibRuntime::Storage::UnifiedStoragePath get_unified_storage_path(const ttstr &path) = 0;
+        virtual ttstr get_filesystem_path(const LibRuntime::Storage::UnifiedStoragePath &path) = 0;
     };
 
     /**
@@ -42,19 +42,19 @@ namespace LibRuntime::Interfaces {
         size_t get_current_directory(tjs_char *result) override {
             return -1;
         };
-        bool set_current_directory(const tjs_char *path) override {
+        bool set_current_directory(const ttstr &path) override {
             return false;
         };
 
-        bool file_exists(const tjs_char *path) override {
+        bool file_exists(const ttstr &path) override {
             return false;
         }
 
-        bool directory_exists(const tjs_char *path) override {
+        bool directory_exists(const ttstr &path) override {
             return false;
         }
 
-        tTJSBinaryStream *open(const tjs_char *path, tjs_uint32 flags) override {
+        tTJSBinaryStream *open(const ttstr &path, tjs_uint32 flags) override {
             return nullptr;
         };
 
@@ -62,28 +62,28 @@ namespace LibRuntime::Interfaces {
             return 260;
         };
 
-        bool get_home_directory(tjs_string &result) override {
+        bool get_home_directory(ttstr &result) override {
             return false;
         }
 
-        bool get_appdata_directory(tjs_string &result) override {
+        bool get_appdata_directory(ttstr &result) override {
             return false;
         }
 
-        bool get_savedata_directory(tjs_string &result) override {
+        bool get_savedata_directory(ttstr &result) override {
             return false;
         }
 
-        bool path_combine(const tjs_string &path1, const tjs_string &path2, tjs_string &result) override {
+        bool path_combine(const ttstr &path1, const ttstr &path2, ttstr &result) override {
             return false;
         }
 
-        LibRuntime::Storage::UnifiedStoragePath get_unified_storage_path(const tjs_string &path) override {
+        LibRuntime::Storage::UnifiedStoragePath get_unified_storage_path(const ttstr &path) override {
             return LibRuntime::Storage::UnifiedStoragePath(TJS_W(""), TJS_W(""), path);
         }
         
-        tjs_string get_filesystem_path(const LibRuntime::Storage::UnifiedStoragePath &path) override {
-            return tjs_string(path.get_fullpath().c_str());
+        ttstr get_filesystem_path(const LibRuntime::Storage::UnifiedStoragePath &path) override {
+            return ttstr(path.get_fullpath().c_str());
         }
         
     };

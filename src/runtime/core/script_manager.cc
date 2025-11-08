@@ -18,30 +18,30 @@ bool ScriptManager::init(const ttstr &startup_script_name, const ttstr &encoding
     if (initialized) return true;
 
     // --- Initialize TJS ---
-    ScriptManager::tjs_engine = new tTJS;
-    if (ScriptManager::tjs_engine == nullptr) return false;
+    tjs_engine = new tTJS;
+    if (tjs_engine == nullptr) return false;
 
     // --- 吉里吉里互換モード毎の初期化 ---
     switch (krkr_compatible) {
         default:
         case 0:
             // 吉里吉里X
-            ScriptManager::tjs_engine->SetPPValue(TJS_W("kirikirix"), 1);
+            tjs_engine->SetPPValue(TJS_W("kirikirix"), 1);
             break;
 
         case 1:
             // 吉里吉里Z
-            ScriptManager::tjs_engine->SetPPValue(TJS_W("kirikiriz"), 1);
+            tjs_engine->SetPPValue(TJS_W("kirikiriz"), 1);
             break;
 
         case 2:
             // 吉里吉里2
-            ScriptManager::tjs_engine->SetPPValue(TJS_W("kirikiri2"), 1);
+            tjs_engine->SetPPValue(TJS_W("kirikiri2"), 1);
             break;
     }
 
     // --- Register native objects ---
-    iTJSDispatch2 *global = ScriptManager::tjs_engine->GetGlobalNoAddRef();
+    iTJSDispatch2 *global = tjs_engine->GetGlobalNoAddRef();
     iTJSDispatch2 *dsp;
     tTJSVariant val;
     #define REGISTER_OBJECT(classname, native_classname) \
@@ -63,7 +63,7 @@ bool ScriptManager::init(const ttstr &startup_script_name, const ttstr &encoding
 
 void ScriptManager::run(const ttstr &script) {
     try {
-        ScriptManager::tjs_engine->ExecScript(script);
+        tjs_engine->ExecScript(script);
     } catch (eTJSScriptException &error) {
         handle_script_error(error);
     }
@@ -71,11 +71,11 @@ void ScriptManager::run(const ttstr &script) {
 
 tTJSVariant ScriptManager::eval(const ttstr &script) {
     tTJSVariant result;
-    ScriptManager::tjs_engine->EvalExpression(script, &result);
+    tjs_engine->EvalExpression(script, &result);
     return result;
 }
 
-bool ScriptManager::assign_message(const tjs_string& msg, const tjs_string& val) {
+bool ScriptManager::assign_message(const ttstr& msg, const ttstr& val) {
     return TJSAssignMessage(msg.c_str(), val.c_str());
 }
 

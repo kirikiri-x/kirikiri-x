@@ -32,7 +32,7 @@ void UnixSysFunc::release_all_app_lock() {
     }
 }
 
-void UnixSysFunc::get_os_name(tjs_string &os_name) {
+void UnixSysFunc::get_os_name(ttstr &os_name) {
     struct utsname uname_buf;
     uname(&uname_buf);
 

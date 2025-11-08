@@ -67,7 +67,7 @@ SystemNativeClass::SystemNativeClass() : tTJSNativeClass(TJS_W("System")) {
 
         TJS_BEGIN_NATIVE_METHOD_DECL(getArgument)
             if (numparams < 1) return TJS_E_BADPARAMCOUNT;
-            tjs_string argval;
+            ttstr argval;
 
             if (!KrkrRuntime::get_argument(param[0]->GetString(), argval)) {
                 result->Clear();
@@ -173,7 +173,7 @@ SystemNativeClass::SystemNativeClass() : tTJSNativeClass(TJS_W("System")) {
         {
             TJS_BEGIN_NATIVE_PROP_GETTER
                 {
-                    tjs_string app_data_path;
+                    ttstr app_data_path;
                     KrkrRuntime::filesystem->get_appdata_directory(app_data_path);
                     *result = app_data_path.c_str();
                     return TJS_S_OK;
@@ -189,7 +189,7 @@ SystemNativeClass::SystemNativeClass() : tTJSNativeClass(TJS_W("System")) {
         {
             TJS_BEGIN_NATIVE_PROP_GETTER
                 {
-                    tjs_string app_data_path;
+                    ttstr app_data_path;
                     if (!(KrkrRuntime::get_argument(TJS_W("-datapath"), app_data_path) || KrkrRuntime::filesystem->get_savedata_directory(app_data_path))) {
                         result->Clear();
                         return TJS_E_FAIL;
@@ -487,7 +487,7 @@ SystemNativeClass::SystemNativeClass() : tTJSNativeClass(TJS_W("System")) {
         {
             TJS_BEGIN_NATIVE_PROP_GETTER
                 {
-                    tjs_string runtime_str;
+                    ttstr runtime_str;
                     KrkrRuntime::get_runtime_version(runtime_str);
                     *result = runtime_str.c_str();
                     return TJS_S_OK;
@@ -503,7 +503,7 @@ SystemNativeClass::SystemNativeClass() : tTJSNativeClass(TJS_W("System")) {
         {
             TJS_BEGIN_NATIVE_PROP_GETTER
                 {
-                    tjs_string runtime_str;
+                    ttstr runtime_str;
                     KrkrRuntime::get_runtime_version_full(runtime_str);
                     *result = runtime_str.c_str();
                     return TJS_S_OK;

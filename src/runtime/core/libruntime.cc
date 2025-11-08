@@ -16,7 +16,7 @@ Interfaces::IConsole* KrkrRuntime::console = new Interfaces::ConsoleFallbackImpl
 Interfaces::ISysFunc* KrkrRuntime::sysfunc = new Interfaces::SysFuncFallbackImpl();
 Interfaces::ISystemUI* KrkrRuntime::system_ui = new Interfaces::SystemUIFallbackImpl();
 Interfaces::IEnvironment* KrkrRuntime::environment = new Interfaces::EnvironmentFallbackImpl();
-std::map<tjs_string, tjs_string> KrkrRuntime::arguments;
+std::map<ttstr, ttstr> KrkrRuntime::arguments;
 bool KrkrRuntime::quit_required = false;
 int KrkrRuntime::quit_code = 0;
 
@@ -26,12 +26,12 @@ int KrkrRuntime::start_runtime(int argc, char *argv[]) {
 
     SDL_Init(SDL_INIT_VIDEO);
 
-    KrkrRuntime::parse_args(argc, argv);
+    parse_args(argc, argv);
     Messages::init_tjs_messages();
     Messages::init_libruntime_messages();
     ScriptManager::init(TJS_W("startup.tjs"), TJS_W("UTF-8"), 1);
 
-    KrkrRuntime::interpreter();
+    interpreter();
 
     if (WindowManager::has_windows()) {
         SDL_Event event;
@@ -50,54 +50,50 @@ int KrkrRuntime::start_runtime(int argc, char *argv[]) {
 }
 
 void KrkrRuntime::parse_args(int argc, char *argv[]) {
-    char *name, *value;
-    tjs_string name_s, value_s;
     for (int i = 0; i < argc; i++) {
         if (*argv[i] != '-') continue;
 
-        name = strtok(argv[i], const_cast<const char*>("="));
-        value = strtok(nullptr, const_cast<const char*>("="));
+        char* name = strtok(argv[i], "=");
+        char* value = strtok(nullptr, "=");
 
-        TVPUtf8ToUtf16(name_s, name);
         if (value == nullptr) {
-            KrkrRuntime::arguments.emplace(name_s, tjs_string(TJS_W("yes")));
+            arguments.emplace(ttstr(name), ttstr(TJS_W("yes")));
         } else {
-            TVPUtf8ToUtf16(value_s, value);
-            KrkrRuntime::arguments.emplace(name_s, value_s);
+            arguments.emplace(ttstr(name), ttstr(value));
         }
     }
 }
 
-bool KrkrRuntime::get_argument(const tjs_string &name, tjs_string &result) {
-    if (auto iter = KrkrRuntime::arguments.find(name); iter != std::end(KrkrRuntime::arguments)) {
+bool KrkrRuntime::get_argument(const ttstr &name, ttstr &result) {
+    if (auto iter = arguments.find(name); iter != std::end(arguments)) {
         result = iter->second;
         return true;
     }
     return false;
 }
 
-void KrkrRuntime::set_argument(const tjs_string& name, const tjs_string &value) {
-    KrkrRuntime::arguments[name] = value;
+void KrkrRuntime::set_argument(const ttstr& name, const ttstr &value) {
+    arguments[name] = value;
 }
 
-void KrkrRuntime::get_runtime_version(tjs_string &verstr) {
-    ttstr version_major(KrkrRuntime::LIBRUNTIME_VERSION_MAJOR);
-    ttstr version_minor(KrkrRuntime::LIBRUNTIME_VERSION_MINOR);
-    ttstr version_patch(KrkrRuntime::LIBRUNTIME_VERSION_PATCH);
+void KrkrRuntime::get_runtime_version(ttstr &verstr) {
+    ttstr version_major(LIBRUNTIME_VERSION_MAJOR);
+    ttstr version_minor(LIBRUNTIME_VERSION_MINOR);
+    ttstr version_patch(LIBRUNTIME_VERSION_PATCH);
 
     ttstr verstr2 = version_major + TJS_W(".") + version_minor + TJS_W(".") + version_patch;
     verstr = verstr2.AsStdString();
 }
 
-void KrkrRuntime::get_runtime_version_full(tjs_string &verstr) {
-    tjs_string runtime_version;
-    KrkrRuntime::get_runtime_version(runtime_version);
+void KrkrRuntime::get_runtime_version_full(ttstr &verstr) {
+    ttstr runtime_version;
+    get_runtime_version(runtime_version);
     verstr = TJS_W("Kirikiri X Runtime ") + runtime_version;
 }
 
 ttstr KrkrRuntime::get_about_text()
 {
-    tjs_string verstr;
+    ttstr verstr;
     ttstr osname;
     get_runtime_version(verstr);
     environment->get_os_name(osname);
@@ -114,8 +110,8 @@ ttstr KrkrRuntime::get_about_text()
 bool KrkrRuntime::interpreter() {
     console->write(Messages::LRInterpreterMode);
     while (!quit_required) {
-        LibRuntime::EventManager::dispatch_continuous_event();
-        tjs_string readresult;
+        EventManager::dispatch_continuous_event();
+        ttstr readresult;
         console->write(TJS_W(">> "));
         console->readline(readresult);
 

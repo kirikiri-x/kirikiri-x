@@ -14,7 +14,7 @@ void WindowsConsole::error(const tjs_char *text) {
     std::cerr << mbstr;
 }
 
-size_t WindowsConsole::readline(tjs_string &result) {
+size_t WindowsConsole::readline(ttstr &result) {
     HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
     std::wstring readresult;
     const size_t CHUNK_SIZE = 1024;

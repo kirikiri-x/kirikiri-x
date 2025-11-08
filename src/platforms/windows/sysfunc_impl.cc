@@ -1,9 +1,10 @@
 #include "sysfunc_impl.h"
 #include <windows.h>
+#include <rpc.h>
 
 void WindowsSysFunc::execute(const tjs_char* program, const tjs_char* params)
 {
-    tjs_string system_text;
+    ttstr system_text;
     system_text += program;
     if (params != nullptr) {
         system_text += TJS_W(" ");

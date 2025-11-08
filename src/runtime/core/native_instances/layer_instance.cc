@@ -10,8 +10,8 @@
 
 using namespace LibRuntime::NativeInstances;
 
-LayerNativeInstance::LayerNativeInstance() {
-
+LayerNativeInstance::LayerNativeInstance(): _renderRect()
+{
 }
 
 tjs_error LayerNativeInstance::Construct(tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *tjs_obj) {

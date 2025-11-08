@@ -12,12 +12,12 @@ public:
     bool directory_exists(const tjs_char *path) override;
 
     tjs_int get_maxpath_length() override;
-    bool get_home_directory(tjs_string &result) override;
-    bool get_appdata_directory(tjs_string &result) override;
-    bool get_savedata_directory(tjs_string &result) override;
+    bool get_home_directory(ttstr &result) override;
+    bool get_appdata_directory(ttstr &result) override;
+    bool get_savedata_directory(ttstr &result) override;
 
-    bool path_combine(const tjs_string &path1, const tjs_string &path2, tjs_string &result) override;
+    bool path_combine(const ttstr &path1, const ttstr &path2, ttstr &result) override;
 
-    LibRuntime::Storage::UnifiedStoragePath get_unified_storage_path(const tjs_string &path) override;
-    tjs_string get_filesystem_path(const LibRuntime::Storage::UnifiedStoragePath &path) override;
+    LibRuntime::Storage::UnifiedStoragePath get_unified_storage_path(const ttstr &path) override;
+    ttstr get_filesystem_path(const LibRuntime::Storage::UnifiedStoragePath &path) override;
 };
