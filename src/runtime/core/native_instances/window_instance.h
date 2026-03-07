@@ -1,10 +1,10 @@
 #pragma once
 #include <memory>
 #include <vector>
-#include <SDL.h>
 #include <tjs.h>
 #include <tjsError.h>
 #include <tjsNative.h>
+#include "interfaces/graphics.h"
 
 namespace LibRuntime {
     namespace Rendering {
@@ -24,13 +24,12 @@ namespace LibRuntime {
             void bring_to_front();
 
             std::shared_ptr<Rendering::LayerTree> get_layer_tree();
+
         private:
-            SDL_Window *window;
-            SDL_Renderer *renderer;
+            std::unique_ptr<Interfaces::IGraphicsWindow> _graphics_window;
 
             std::vector<tTJSVariantClosure> objects;
             std::shared_ptr<Rendering::LayerTree> layer_tree;
         };
     }
-
 }

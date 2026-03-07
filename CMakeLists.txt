@@ -29,6 +29,9 @@ target_include_directories(platform_interface INTERFACE
 # === ランタイム層 ===
 add_subdirectory(src/runtime)
 
+# === グラフィックスバックエンド ===
+add_subdirectory(src/backends/sdl)
+
 # === プラットフォーム実装 ===
 include(Platform)
 
@@ -40,6 +43,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ${PLATFORM_IMPL_TARGET}
     runtime
+    krkrx::sdl_backend
 )
 
 # 実行ファイルの設定

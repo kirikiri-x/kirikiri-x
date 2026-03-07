@@ -1,7 +1,9 @@
 #pragma once
+#include <vector>
+#include <memory>
 #include <tjs.h>
 #include <tjsNative.h>
-#include <SDL.h>
+#include "interfaces/graphics.h"
 
 namespace LibRuntime::NativeInstances {
     class LayerNativeInstance : public tTJSNativeInstance {
@@ -16,15 +18,37 @@ namespace LibRuntime::NativeInstances {
         void set_size(tjs_int width, tjs_int height);
         void set_visible(bool visible);
 
-        SDL_Texture *render(SDL_Renderer *renderer);
+        // CPUバッファに子レイヤーを合成し、必要に応じてGPUテクスチャへアップロードする
+        // 戻り値: GPUテクスチャハンドル (サイズが0の場合は nullptr)
+        Interfaces::ITextureHandle* render(Interfaces::IGraphicsWindow* gfx);
 
-        SDL_Rect get_render_rect() { return _renderRect; }
+        Interfaces::Rect get_render_rect() const {
+            return { _rect.x, _rect.y, _rect.w, _rect.h };
+        }
+
+        // CPUバッファへの直接アクセス (TJS2スクリプトからのピクセル操作用)
+        uint32_t* pixels() { return _pixels.data(); }
+        void mark_dirty() { _dirty = true; }
 
     private:
         tTJSVariantClosure _owner_window;
         tTJSVariantClosure _parent_layer;
-        std::vector<LayerNativeInstance *> _children;
+        std::vector<LayerNativeInstance*> _children;
 
-        SDL_Rect _renderRect;
+        struct { int x, y, w, h; } _rect{};
+
+        // CPUサイドのピクセルバッファ (ARGB8888)
+        std::vector<uint32_t> _pixels;
+
+        // GPUテクスチャハンドル
+        std::unique_ptr<Interfaces::ITextureHandle> _texture;
+
+        // CPUバッファがGPUより新しい場合 true (サイズ変更時も true にリセット)
+        bool _dirty = true;
+
+        // テクスチャを生成したウィンドウ。変わった場合は再生成する
+        Interfaces::IGraphicsWindow* _last_gfx = nullptr;
+
+        void resize_pixels(int w, int h);
     };
 }

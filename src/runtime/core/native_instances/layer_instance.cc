@@ -7,37 +7,43 @@
 #include "../native_classes/window.h"
 #include "../native_classes/layer.h"
 #include "../rendering/layer_tree.h"
+#include "../rendering/layer_compositor.h"
 
 using namespace LibRuntime::NativeInstances;
+using namespace LibRuntime::Interfaces;
+using namespace LibRuntime::Rendering;
 
-LayerNativeInstance::LayerNativeInstance(): _renderRect()
-{
-}
+LayerNativeInstance::LayerNativeInstance() {}
 
 tjs_error LayerNativeInstance::Construct(tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *tjs_obj) {
     if (numparams < 2) return TJS_E_BADPARAMCOUNT;
 
-    // ウィンドウのオブジェクトを取得
     auto window = param[0]->AsObjectClosure();
     if (window.Object == nullptr) return TJS_E_INVALIDPARAM;
 
-    // 親レイヤーのオブジェクトを取得
     auto parent_layer = param[1]->AsObjectClosure();
     if (parent_layer.Object == nullptr) {
         parent_layer.Release();
 
-        // 親レイヤーがNullの場合は，自身がプライマリレイヤーとなる
+        // 親レイヤーが Null の場合、自身がプライマリレイヤーとなる
         WindowNativeInstance *window_instance;
-        auto nis_result = window.ObjThis->NativeInstanceSupport(TJS_NIS_GETINSTANCE, NativeClasses::WindowNativeClass::ClassID, reinterpret_cast<iTJSNativeInstance **>(&window_instance));
+        auto nis_result = window.ObjThis->NativeInstanceSupport(
+            TJS_NIS_GETINSTANCE,
+            NativeClasses::WindowNativeClass::ClassID,
+            reinterpret_cast<iTJSNativeInstance **>(&window_instance)
+        );
         if (TJS_FAILED(nis_result)) return TJS_E_INVALIDPARAM;
 
         auto layer_tree = window_instance->get_layer_tree();
         if (layer_tree == nullptr) return TJS_E_INVALIDPARAM;
         layer_tree->add_primary_layer(this);
     } else {
-        // 親レイヤーがある場合は，親レイヤーの子に自身を登録
         LayerNativeInstance *parent_layer_instance;
-        auto nis_result = parent_layer.ObjThis->NativeInstanceSupport(TJS_NIS_GETINSTANCE, NativeClasses::LayerNativeClass::ClassID, reinterpret_cast<iTJSNativeInstance **>(&parent_layer_instance));
+        auto nis_result = parent_layer.ObjThis->NativeInstanceSupport(
+            TJS_NIS_GETINSTANCE,
+            NativeClasses::LayerNativeClass::ClassID,
+            reinterpret_cast<iTJSNativeInstance **>(&parent_layer_instance)
+        );
         if (TJS_FAILED(nis_result)) return TJS_E_INVALIDPARAM;
 
         parent_layer_instance->add_children(this);
@@ -45,7 +51,6 @@ tjs_error LayerNativeInstance::Construct(tjs_int numparams, tTJSVariant **param,
     }
 
     _owner_window = window;
-
     return TJS_S_OK;
 }
 
@@ -72,40 +77,63 @@ void LayerNativeInstance::remove_children(LayerNativeInstance *child) {
 }
 
 void LayerNativeInstance::set_position(tjs_int x, tjs_int y) {
-    _renderRect.x = x;
-    _renderRect.y = y;
+    _rect.x = x;
+    _rect.y = y;
 }
 
 void LayerNativeInstance::set_size(tjs_int width, tjs_int height) {
-    _renderRect.w = width;
-    _renderRect.h = height;
+    if (_rect.w == width && _rect.h == height) return;
+    _rect.w = width;
+    _rect.h = height;
+    resize_pixels(width, height);
 }
 
-SDL_Texture *LayerNativeInstance::render(SDL_Renderer *renderer) {
-    auto base_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, _renderRect.w, _renderRect.h);
-    SDL_SetTextureBlendMode(base_texture, SDL_BLENDMODE_NONE);
-    SDL_SetRenderTarget(renderer, base_texture);
+void LayerNativeInstance::set_visible(bool /*visible*/) {
+    // TODO: visible フラグの実装
+}
 
-    // ソフトウェアレンダリングで背景などを塗りつぶす
-    auto surface = SDL_CreateRGBSurface(0, _renderRect.w, _renderRect.h, 32, 0, 0, 0, 0);
-    SDL_FillRect(surface, nullptr, SDL_MapRGB(surface->format, 40, 40, 40));    //TODO: 色は外部から指定できるようにする
+void LayerNativeInstance::resize_pixels(int w, int h) {
+    _pixels.assign(static_cast<size_t>(w) * h, 0x00000000);
+    _texture.reset();  // サイズが変わったのでGPUテクスチャも再生成が必要
+    _dirty = true;
+}
 
-    // ソフトウェアレンダリングしたものをテクスチャに変換し、レンダラーに描画
-    auto texture2 = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_RenderCopy(renderer, texture2, nullptr, nullptr);
-    SDL_DestroyTexture(texture2);
-    SDL_FreeSurface(surface);
+ITextureHandle* LayerNativeInstance::render(IGraphicsWindow* gfx) {
+    if (_rect.w <= 0 || _rect.h <= 0) return nullptr;
 
-    // 子レイヤーを描画
-    for (auto child : _children) {
-        auto child_texture = child->render(renderer);
-        if (child_texture == nullptr) continue;
-
-        // 子レイヤーから返されたテクスチャをベーステクスチャに上書き描画
-        SDL_SetRenderTarget(renderer, base_texture);
-        SDL_RenderCopy(renderer, child_texture, nullptr, &child->_renderRect);
-        SDL_DestroyTexture(child_texture);
+    // GPUテクスチャが未生成、またはウィンドウが変わった場合は再生成
+    if (_texture == nullptr || _last_gfx != gfx) {
+        _texture = gfx->create_texture(_rect.w, _rect.h);
+        _last_gfx = gfx;
+        _dirty = true;
     }
 
-    return base_texture;
+    if (_dirty) {
+        // 背景色で塗りつぶす
+        // TODO: 背景色は外部から設定できるようにする
+        LayerCompositor::fill_rect(
+            _pixels.data(), _rect.w, _rect.h,
+            0, 0, _rect.w, _rect.h,
+            0xFF282828  // ARGB: 不透明の濃いグレー
+        );
+
+        // 子レイヤーを自身のCPUバッファへアルファ合成する
+        for (auto* child : _children) {
+            auto* child_texture = child->render(gfx);
+            if (child_texture == nullptr) continue;
+
+            auto child_rect = child->get_render_rect();
+            LayerCompositor::composite_alpha(
+                _pixels.data(), _rect.w, _rect.h,
+                child->pixels(), child_rect.w, child_rect.h,
+                child_rect.x, child_rect.y
+            );
+        }
+
+        // CPUバッファをGPUテクスチャへアップロード
+        gfx->update_texture(_texture.get(), _pixels.data());
+        _dirty = false;
+    }
+
+    return _texture.get();
 }

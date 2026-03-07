@@ -1,18 +1,16 @@
 #include "window_instance.h"
 #include "../window_manager.h"
 #include "../rendering/layer_tree.h"
+#include "../libruntime.h"
 #include <algorithm>
 #include "../event_manager.h"
 
 using namespace LibRuntime::NativeInstances;
 
-WindowNativeInstance::WindowNativeInstance() {
-
-}
+WindowNativeInstance::WindowNativeInstance() {}
 
 tjs_error TJS_INTF_METHOD WindowNativeInstance::Construct(tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *tjs_obj) {
-    this->window = SDL_CreateWindow(TJS_N("Window"), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 300, 300, 0);
-    this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED);
+    _graphics_window = KrkrRuntime::graphics->create_window("Window", 300, 300);
     this->layer_tree = std::make_shared<Rendering::LayerTree>();
     WindowManager::register_window(this);
     EventManager::add_window_instance(this);
@@ -25,10 +23,7 @@ void TJS_INTF_METHOD WindowNativeInstance::Invalidate() {
     }
     objects.clear();
 
-    if (window != nullptr) {
-        SDL_DestroyWindow(window);
-        window = nullptr;
-    }
+    _graphics_window.reset();
 
     WindowManager::unregister_window(this);
     EventManager::remove_window_instance(this);
@@ -36,7 +31,6 @@ void TJS_INTF_METHOD WindowNativeInstance::Invalidate() {
 
 void WindowNativeInstance::add_object(tTJSVariantClosure clo) {
     if (objects.end() != std::find(objects.begin(), objects.end(), clo)) return;
-
     objects.push_back(clo);
     clo.AddRef();
 }
@@ -44,22 +38,18 @@ void WindowNativeInstance::add_object(tTJSVariantClosure clo) {
 void WindowNativeInstance::remove_object(tTJSVariantClosure clo) {
     auto it = std::find(objects.begin(), objects.end(), clo);
     if (it == objects.end()) return;
-
     objects.erase(it);
     clo.Release();
 }
 
 void WindowNativeInstance::update() {
-    SDL_RenderClear(this->renderer);
-    layer_tree->render(this->renderer);
-    SDL_RenderPresent(this->renderer);
+    layer_tree->render(_graphics_window.get());
 }
 
 void WindowNativeInstance::bring_to_front() {
-    SDL_RaiseWindow(this->window);
+    _graphics_window->raise();
 }
 
 std::shared_ptr<LibRuntime::Rendering::LayerTree> WindowNativeInstance::get_layer_tree() {
     return layer_tree;
 }
-

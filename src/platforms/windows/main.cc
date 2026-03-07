@@ -1,4 +1,3 @@
-#include <SDL.h>
 #include <SDL_main.h>
 #include "filesystem_impl.h"
 #include "console_impl.h"
@@ -8,6 +7,7 @@
 #include "environment_impl.h"
 #include "sysfunc_impl.h"
 #include "system_ui_impl.h"
+#include "sdl_graphics.h"
 
 void alloc_console() {
 #if DEBUG
@@ -25,12 +25,12 @@ int main(int argv, char* args[]) {
     UINT sav = GetConsoleOutputCP();
     SetConsoleOutputCP(65001);
 
-
     LibRuntime::KrkrRuntime::filesystem = new WindowsFileSystem();
     LibRuntime::KrkrRuntime::console = new WindowsConsole();
     LibRuntime::KrkrRuntime::system_ui = new WindowsSystemUI();
     LibRuntime::KrkrRuntime::sysfunc = new WindowsSysFunc();
     LibRuntime::KrkrRuntime::environment = new WindowsEnvironment();
+    LibRuntime::KrkrRuntime::graphics = new Backends::SDL::SDLGraphicsSystem();
     LibRuntime::KrkrRuntime::start_runtime(argv, args);
 
     SetConsoleOutputCP(sav);

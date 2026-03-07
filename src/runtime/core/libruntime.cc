@@ -16,6 +16,7 @@ Interfaces::IConsole* KrkrRuntime::console = new Interfaces::ConsoleFallbackImpl
 Interfaces::ISysFunc* KrkrRuntime::sysfunc = new Interfaces::SysFuncFallbackImpl();
 Interfaces::ISystemUI* KrkrRuntime::system_ui = new Interfaces::SystemUIFallbackImpl();
 Interfaces::IEnvironment* KrkrRuntime::environment = new Interfaces::EnvironmentFallbackImpl();
+Interfaces::IGraphicsSystem* KrkrRuntime::graphics = nullptr;
 std::map<ttstr, ttstr> KrkrRuntime::arguments;
 bool KrkrRuntime::quit_required = false;
 int KrkrRuntime::quit_code = 0;
@@ -24,7 +25,7 @@ int KrkrRuntime::start_runtime(int argc, char *argv[]) {
     console->write(TJS_W("--- Kirikiri X Runtime ---\n"));
     console->write(TJS_W("Initializing runtime\n"));
 
-    SDL_Init(SDL_INIT_VIDEO);
+    if (graphics) graphics->init();
 
     parse_args(argc, argv);
     Messages::init_tjs_messages();
@@ -33,20 +34,15 @@ int KrkrRuntime::start_runtime(int argc, char *argv[]) {
 
     interpreter();
 
-    if (WindowManager::has_windows()) {
-        SDL_Event event;
-        while (true) {
-            while (SDL_PollEvent(&event)) {
-                if (event.type == SDL_QUIT) {
-                    return 0;
-                }
-                EventManager::dispatch_all_events();
-            }
+    if (WindowManager::has_windows() && graphics) {
+        while (!quit_required) {
+            if (!graphics->poll_events()) break;
+            EventManager::dispatch_all_events();
         }
     }
 
-    SDL_Quit();
-    return 0;
+    if (graphics) graphics->shutdown();
+    return quit_code;
 }
 
 void KrkrRuntime::parse_args(int argc, char *argv[]) {

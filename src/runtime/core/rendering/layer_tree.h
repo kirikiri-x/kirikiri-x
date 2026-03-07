@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <SDL.h>
+#include "interfaces/graphics.h"
 
 namespace LibRuntime {
     namespace NativeInstances {
@@ -12,7 +12,7 @@ namespace LibRuntime {
         public:
             void add_primary_layer(NativeInstances::LayerNativeInstance *layer);
             void remove_primary_layer(NativeInstances::LayerNativeInstance *layer);
-            void render(SDL_Renderer *renderer);
+            void render(Interfaces::IGraphicsWindow *gfx);
         private:
             std::vector<NativeInstances::LayerNativeInstance *> primary_layers;
         };

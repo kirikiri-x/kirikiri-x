@@ -36,15 +36,11 @@ target_include_directories(runtime
 )
 
 # === 依存ライブラリ ===
-# SDL2mainの依存関係（必要な場合のみ）
-if(TARGET SDL2::SDL2main)
-    target_link_libraries(runtime PRIVATE SDL2::SDL2main)
-endif()
-
-target_link_libraries(runtime 
+target_link_libraries(runtime
     PUBLIC
         onig                # 正規表現エンジン
-        SDL2::SDL2-static   # マルチメディア機能
+        # グラフィックスバックエンドはランタイムに含めない。
+        # 各プラットフォームの実行ファイルが適切なバックエンドをリンクする。
 )
 
 # === ターゲットのプロパティ ===
