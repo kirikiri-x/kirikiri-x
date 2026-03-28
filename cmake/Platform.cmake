@@ -40,7 +40,10 @@ elseif(UNIX AND NOT APPLE)
     
 elseif(APPLE)
     set(PLATFORM_NAME "macos")
-    message(WARNING "macOS support is not implemented")
+    set(PLATFORM_IMPL_TARGET macos_impl)
+    set(PLATFORM_ENTRY_POINT_FILES
+        src/platforms/macos/main.cc
+    )
     
 else()
     message(FATAL_ERROR "Unsupported platform")
